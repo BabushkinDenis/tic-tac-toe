@@ -13,26 +13,38 @@ class Room {
             this.createGame(this.human, this.computer);
         });
 
-        this.socket.on('makeStep', step => {
-            //console.log(step);
+        this.socket.on('humenMove', step => {
             this.human.trigger("makeStep", step);
         });
-
         
         this.game = undefined;
     }
 
     createGame(human, computer) {
-        this.game = new Game(human, computer);
+        this.throwCoin() ? human.setFirstPleer() : computer.setFirstPleer();
 
-        this.game.startGame()
-            .on("humanTurn", turn => {
-                this.socket.emit("humanTurn", turn);
+        this.game = new Game(human, computer)
+            .on("computerMove", move => {
+                this.socket.emit("computerMove", move);
             })
             .on("gameOver", (win) => {
                 this.socket.emit("gameOver", win);
                 this.saveGame();
             });
+        
+        this.socket.emit("gameCreate", {
+            markers: {
+                human: human.marker,
+                computer: computer.marker
+            }
+        });
+        
+        this.game.startGame(); 
+        
+    }
+
+    throwCoin () {
+        return  Math.random() < 0.5 ;
     }
 
     saveGame() {

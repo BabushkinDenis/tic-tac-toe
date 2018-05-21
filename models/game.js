@@ -9,25 +9,57 @@ class Game extends Event{
     constructor(human, computer) {
         super();
         this.map = [[0,0,0],[0,0,0],[0,0,0]];
-        this.log = {};
+        this.steps = [];
         this.human = human;
         this.computer = computer;
+       
     }
 
     startGame() {
+       
         this.human.on("makeStep", step => {
-            console.log(step);
-            if(!this.ifGameOver()) {
-                this.computer.makeTurn();
+            this.map[step.y][step.x] = this.human.marker;
+            
+            if(this.ifHaveWinLine()) {
+                this.trigger("gameOver", "human");
+            } else if (this.ifFullBorder()) {
+                this.trigger("gameOver");
+            } else {
+                this.computer.makeStep(this.map);
             }
         })
 
+        this.computer.on("makeStep", step => {
+            this.map[step.y][step.x] = this.computer.marker;
+            if(this.ifHaveWinLine()) {
+                this.trigger("gameOver", "computer");
+            } else if (this.ifFullBorder()) {
+                this.trigger("gameOver");
+            } else {
+                this.trigger("computerMove", step);
+            }
+        })
+
+
+        if(this.computer.isFirstPleer) {
+            this.computer.makeStep(this.map);
+        }
         return this;
     }
+    ifHaveWinLine () {
+        return false;
+    }
 
-    ifGameOver () {
-
-        return true;
+    ifFullBorder () {
+        var boardIsFull = true;
+        this.map.forEach(function(col, y){
+            col.forEach( function(cell, x) {
+                if(cell == 0) {
+                    boardIsFull  = false;
+                }
+            })
+        });
+        return boardIsFull;
     }
 
     stopGame()  {

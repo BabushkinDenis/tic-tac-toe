@@ -15,18 +15,35 @@ function GameBoard (wrap) {
 GameBoard.prototype.bindEvent = function(el) {
     var self = this;
     el.addEventListener("click", function (event) {
-        this.classList.add("_" + self.markers.human);
-        self.trigger("move", { 
-            x: this.dataset.x, 
-            y: this.dataset.y
-        });
+        if(!this.classList.contains("__checked")) {
+            this.classList.add("_" + self.markers.human);
+            this.classList.add("__checked");
+            self.trigger("humenMove", { 
+                x: this.dataset.x, 
+                y: this.dataset.y
+            });
+        }
     }, false);
+}
+
+GameBoard.prototype.setComputerMove = function(move) {
+    var self = this;
+    [].forEach.call(this.wrap.getElementsByClassName("__cell"), function(el) {
+        if(el.dataset.x == move.x && el.dataset.y == move.y) {
+            el.classList.add("_" + self.markers.computer);
+            el.classList.add("__checked");
+        }
+    })
+}
+
+GameBoard.prototype.show  = function() {
+    this.wrap.classList.remove("_hidden");
 }
 
 GameBoard.prototype.erase = function() {
     var self = this;
     [].forEach.call(this.wrap.getElementsByClassName("__cell"), function(el) {
-        el.classList.remove("_" + self.markers.human, "_" + self.markers.computer);
+        el.classList.remove("_" + self.markers.human, "_" + self.markers.computer, "__checked");
     });
 }
 

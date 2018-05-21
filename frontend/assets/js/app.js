@@ -7,16 +7,26 @@ var GameBoard = require("./gameBoard/gameBoard");
     var _initListners = function() {
         var self = this;
 
-        this.socket.on('gameInited', function(socket){
-            self.socket.emit("turn", [1,3]);
+        document.getElementById('lets-play-btn').addEventListener("click", function (event) {
+            document.getElementById("reg-player-form").classList.add("_hidden");
+            self.gameBoard.show();
+            self.socket.emit("letsPlay",  document.getElementById('player-name-input').value);
+        });
+                
+        this.socket.on('gameCreate', function(gameParams){
+            self.gameBoard.markers= gameParams.markers;
         });
 
-        this.socket.on('turn', function(turn){
-            console.log(turn);
+        this.socket.on('computerMove', function(move){
+            self.gameBoard.setComputerMove(move);
         });
 
-        this.gameBoard.on("move", function(move){
-            console.log(move);
+        this.gameBoard.on("humenMove", function(move) {
+            self.socket.emit("humenMove", move);
+        })
+
+        this.socket.on('gameOver', function(){
+            alert("gameOver");
         })
     }
 
