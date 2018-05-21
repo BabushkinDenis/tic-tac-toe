@@ -1,0 +1,42 @@
+{{> _header }}
+
+    <body >
+
+        <div class = "GameWrapper">
+            <div class = "GameWrapper__regPlayer RegPlayer">
+                <input class = "RegPlayer__name" placeholder= "enter yor name" name = "player" id = "player-name-input"/>
+                <button class = "RegPlayer__btn" id = "lets-play-btn">Lets Play</button>
+            </div>
+
+            <div class = "GameWrapper__gameBoard">
+                <div class = "GameBoard" id = "game-board">
+                    <div class = "GameBoard__row _clearfix">
+                        <div class ="GameBoard__cell _icon _circle __cell" data-y = "0" data-x = "0"></div>
+                        <div class="GameBoard__cell _icon __cell" data-y = "0" data-x = "1"></div>
+                        <div class="GameBoard__cell _icon __cell" data-y = "0" data-x = "2"></div>
+                    </div>
+                    <div class="GameBoard__row _clearfix">
+                        <div class="GameBoard__cell _icon __cell" data-y = "1" data-x = "0"></div>
+                        <div class="GameBoard__cell _icon __cell" data-y = "1" data-x = "1"></div>
+                        <div class="GameBoard__cell _icon __cell" data-y = "1" data-x = "2"></div>
+                    </div>
+                    <div class="GameBoard__row _clearfix">
+                        <div class="GameBoard__cell _icon __cell" data-y = "2" data-x = "0"></div>
+                        <div class="GameBoard__cell _icon __cell" data-y = "2" data-x = "1"></div>
+                        <div class="GameBoard__cell _icon __cell" data-y = "2" data-x = "2"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="GameWrapper__gameResults">
+                <span>Game results:</span>
+            </div>
+        </div>
+
+
+        <script type="text/javascript" src="/public/js/app.js"></script>
+
+	</body>
+
+
+
+</html>

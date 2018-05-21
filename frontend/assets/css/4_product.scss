@@ -1,0 +1,128 @@
+.GameWrapper {
+    position: absolute;
+    left:0px;
+    right: 0px;
+    top:0px;
+    bottom: 0px;
+    min-width: 320px;
+    width: 50%;
+    height: 50%;
+    margin: auto auto;
+
+    &__regPlayer {
+        .RegPlayer {
+            &__name {
+                border: none;
+                background: transparent;
+                border-bottom: 2px solid $red;
+                width: 200px;
+                margin: 0 auto; 
+                display: block;
+                margin-bottom: 20px;
+                color: $white;
+            }
+
+            &__btn {
+                background: $red;
+                color: white;
+                width: 200px;
+                height: 40px;
+                margin: 0 auto; 
+                display: block;
+                border: none;
+            }
+        }
+    }
+
+    &__gameBoard { 
+        position: relative;
+        width: 50%;
+        float: left;
+
+        //height: auto;
+
+        &:after {
+            content: '';
+            display: block;
+            padding-top: 100%; 
+        }
+
+        .GameBoard {
+            position: absolute;
+            top:0px;
+            bottom: 0px;
+            left:0px;
+            right: 0px;
+
+            &__row {
+                height: 33.3%;
+                &:first-child {
+                    .GameBoard__cell { 
+                        border-top:none;
+                    }
+                }
+                &:last-child {
+                    .GameBoard__cell {
+                        border-bottom:none;
+                    }
+                }
+            }
+
+            &__cell {
+                width: 33%;
+                height: 100%;
+                float: left;
+                border: 2px solid $white;
+                box-sizing: border-box;
+                position: relative;
+
+                &._cross {
+                    &:before {
+                        content: "\ea0f";
+                        font-size: 30px;
+                        height: 30px;
+                        width: 30px;
+                        position: absolute;
+                        top: 0px;
+                        bottom: 0px;
+                        right: 0px;
+                        left: 0px;
+                        margin: auto;
+                        color: $red;
+                    }
+                }
+                &._circle {
+                    &:before {
+                        content: "\ea56";
+                        font-size: 30px;
+                        height: 30px;
+                        width: 30px;
+                        position: absolute;
+                        top: 0px;
+                        bottom: 0px;
+                        right: 0px;
+                        left: 0px;
+                        margin: auto;
+                        color: $blue;
+                    }
+                }
+
+                &:first-child {
+                    border-left:none;
+                }
+                &:last-child {
+                    border-right: none;
+                }
+            }
+        }
+
+    }
+
+
+    &__gameResults {
+        width: 50%;
+        float: left;
+        padding-left: 20px;
+        box-sizing: border-box;
+    }
+}
