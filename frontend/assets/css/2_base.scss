@@ -72,7 +72,12 @@ body {
     min-width: 320px;
 }
 
-
+button {
+    background: $red;
+    color: white;
+    display: block;
+    border: none;
+}
 
 
 

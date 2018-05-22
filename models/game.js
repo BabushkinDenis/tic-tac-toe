@@ -6,65 +6,77 @@
 var Event = require("../lib/event");
 
 class Game extends Event{
-    constructor(human, computer) {
+    constructor() {
         super();
         this.map = [[0,0,0],[0,0,0],[0,0,0]];
         this.steps = [];
-        this.human = human;
-        this.computer = computer;
+
+        this.players = [];
+        this.winNumbers = [7, 56, 448, 73, 146, 292, 273, 84];
+        // this.human = human;
+        // this.computer = computer;
        
     }
 
     startGame() {
-       
-        this.human.on("makeStep", step => {
-            this.map[step.y][step.x] = this.human.marker;
-            
-            if(this.ifHaveWinLine()) {
-                this.trigger("gameOver", "human");
-            } else if (this.ifFullBorder()) {
-                this.trigger("gameOver");
-            } else {
-                this.computer.makeStep(this.map);
-            }
-        })
-
-        this.computer.on("makeStep", step => {
-            this.map[step.y][step.x] = this.computer.marker;
-            if(this.ifHaveWinLine()) {
-                this.trigger("gameOver", "computer");
-            } else if (this.ifFullBorder()) {
-                this.trigger("gameOver");
-            } else {
-                this.trigger("computerMove", step);
-            }
-        })
-
-
-        if(this.computer.isFirstPleer) {
-            this.computer.makeStep(this.map);
+        this.map = [[0, 0, 0], [0, 0, 0], [0, 0, 0]];
+        this.players[0].winNumber = 0;
+        this.players[1].winNumber = 0;
+        this.steps = [];
+        if (this.players[1].isFirstPleer) {
+            this.players[1].makeStep(this.map);
         }
+
+        console.log(this.map);
         return this;
     }
-    ifHaveWinLine () {
-        return false;
+
+    addPleer (pleer) {
+        this.players.push(pleer);
+        return this;
+    }
+    initPleer () {
+        this.players[0].on("makeStep", step => {
+            this.map[step.y][step.x] = this.players[0].marker;
+            this.steps.push(step);
+            if (this.checkWin()) {
+                this.trigger("gameOver", "human");
+            } else if (this.ifFullBorder()) {
+                this.trigger("gameOver", "pat");
+            } else {
+                this.players[1].makeStep(this.map);
+            }
+        })
+
+        this.players[1].on("makeStep", step => {
+            this.map[step.y][step.x] = this.players[1].marker;
+            this.steps.push(step);
+            this.trigger("computerMove", step);
+            if (this.checkWin()) {
+                this.trigger("gameOver", "computer");
+            } else if (this.ifFullBorder()) {
+                this.trigger("gameOver", "pat");
+            } 
+        })
+        return this;
+    }
+
+    checkWin() {
+        let hasWinner = false;
+        console.log(this.players[0].winNumber, this.players[1].winNumber);
+        this.winNumbers.forEach(winNumber => {
+            if (winNumber == this.players[0].winNumber || winNumber == this.players[1].winNumber ) {
+                hasWinner = true;
+            }
+        });
+        return hasWinner ;
     }
 
     ifFullBorder () {
-        var boardIsFull = true;
-        this.map.forEach(function(col, y){
-            col.forEach( function(cell, x) {
-                if(cell == 0) {
-                    boardIsFull  = false;
-                }
-            })
-        });
-        return boardIsFull;
+        return this.steps.length >= 9;
     }
 
-    stopGame()  {
-
-    }
+  
 };
 
 module.exports = Game;

@@ -4,8 +4,8 @@
 
         <div class = "GameWrapper">
             <div class = "GameWrapper__regPlayer RegPlayer" id = "reg-player-form">
-                <input class = "RegPlayer__name" placeholder= "enter yor name" name = "player" id = "player-name-input"/>
-                <button class = "RegPlayer__btn" id = "lets-play-btn">Lets Play</button>
+                <input class = "RegPlayer__name" autocomplete="off" placeholder= "enter yor name" name = "player" id = "player-name-input"/>
+                <button class = "RegPlayer__btn">Lets Play</button>
             </div>
 
             <div class = "GameWrapper__gameBoard _hidden" id = "game-board">
@@ -27,9 +27,13 @@
                     </div>
                 </div>
             </div>
-            <div class="GameWrapper__gameResults _hidden">
+            <div class="GameWrapper__gameResults _hidden" id = "game-results">
                 <span>Game results:</span>
+                <div>
+                    
+                </div>
             </div>
+            <button class="GameWrapper__newGame _hidden" id = "new-game-btn">New game</button>
         </div>
 
 

@@ -1,41 +1,56 @@
 
 var io = require('socket.io-client');
 var GameBoard = require("./gameBoard/gameBoard");
+var RegForm = require("./regForm/regForm");
+var GameResults = require("./gameResults/gameResults");
 
 (function (root){
 
-    var _initListners = function() {
+    var _dispatcher = function() {
         var self = this;
 
-        document.getElementById('lets-play-btn').addEventListener("click", function (event) {
-            document.getElementById("reg-player-form").classList.add("_hidden");
+        this.regForm.on("form-submited", function(formData) {
+            self.newGameBtn.classList.remove("_hidden");
             self.gameBoard.show();
-            self.socket.emit("letsPlay",  document.getElementById('player-name-input').value);
+            self.gameResults.show();
+            self.socket.emit("setPlayerName", formData.pleerName);
+            self.socket.emit("startGame");
         });
-                
-        this.socket.on('gameCreate', function(gameParams){
+                  
+        this.socket.on('gameCreate', function(gameParams) {
+            console.log(gameParams);
+            self.gameBoard.erase();
             self.gameBoard.markers= gameParams.markers;
         });
 
         this.socket.on('computerMove', function(move){
             self.gameBoard.setComputerMove(move);
         });
-
+                
         this.gameBoard.on("humenMove", function(move) {
             self.socket.emit("humenMove", move);
-        })
+        });
 
-        this.socket.on('gameOver', function(){
-            alert("gameOver");
-        })
+
+
+        this.socket.on('gameOver', function(result){
+            console.log("gameOver", result);
+        });
+
+
+        this.newGameBtn.addEventListener("click", function (event) {
+            self.socket.emit("startGame");
+        });
     }
 
 
     var App = function() {
         this.socket = io.connect('http://localhost:3000');
+        this.regForm = new RegForm(document.getElementById("reg-player-form"));
         this.gameBoard = new GameBoard(document.getElementById('game-board'));
-
-        _initListners.apply(this);
+        this.gameResults = new GameResults(document.getElementById('game-results')); 
+        this.newGameBtn = document.getElementById('new-game-btn');
+        _dispatcher.apply(this);
     };
 
 

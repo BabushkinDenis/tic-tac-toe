@@ -9,10 +9,10 @@ function GameBoard (wrap) {
         computer: "circle"
     };
 
-    [].forEach.call(wrap.getElementsByClassName("__cell"), this.bindEvent.bind(this));
+    [].forEach.call(wrap.getElementsByClassName("__cell"), this.onCellClick.bind(this));
 }
 
-GameBoard.prototype.bindEvent = function(el) {
+GameBoard.prototype.onCellClick = function(el) {
     var self = this;
     el.addEventListener("click", function (event) {
         if(!this.classList.contains("__checked")) {
