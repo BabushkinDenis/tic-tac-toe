@@ -40,6 +40,9 @@ var GameResults = require("./gameResults/gameResults");
 
         this.socket.on("playedGames", function(playedGanes){
             console.log(playedGanes);
+            (playedGanes||[]).forEach(function(row){
+                self.gameResults.addRow(row);                
+            });
         });
 
         this.newGameBtn.addEventListener("click", function (event) {
