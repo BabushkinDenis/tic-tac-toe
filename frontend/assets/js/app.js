@@ -15,12 +15,11 @@ var GameResults = require("./gameResults/gameResults");
             self.gameResults.show();
             self.socket.emit("setPlayerName", formData.pleerName);
             self.socket.emit("startGame");
+            self.socket.emit("getGames");
         });
                   
         this.socket.on('gameCreate', function(gameParams) {
-            console.log(gameParams);
-            self.gameBoard.erase();
-            self.gameBoard.markers= gameParams.markers;
+            self.gameBoard.startGame(gameParams);
         });
 
         this.socket.on('computerMove', function(move){
@@ -34,9 +33,14 @@ var GameResults = require("./gameResults/gameResults");
 
 
         this.socket.on('gameOver', function(result){
+            self.gameBoard.stopGame();
             console.log("gameOver", result);
         });
 
+
+        this.socket.on("playedGames", function(playedGanes){
+            console.log(playedGanes);
+        });
 
         this.newGameBtn.addEventListener("click", function (event) {
             self.socket.emit("startGame");

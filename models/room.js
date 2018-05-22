@@ -2,6 +2,8 @@ var Human = require("./human");
 var Computer = require("./computer");
 var Game = require("./game");
 
+
+
 class Room {
 
     constructor(socket) {
@@ -18,43 +20,33 @@ class Room {
             })
             .on('gameOver', (win) => {
                 this.socket.emit('gameOver', win);
-                this.saveGame();
             });
 
         this.socket.on('setPlayerName', this.human.setPlayerName.bind(this.human));
         this.socket.on("startGame", this.createGame.bind(this));
         this.socket.on('humenMove', this.human.makeStep.bind(this.human));
+        this.socket.on('getGames', () => {
+            this.game.getPlayed()
+                .then(result=>{
+                    this.socket.emit("playedGames", result);
+                });
+        });
     }
 
     createGame() {
-        let coin = this.throwCoin();
-        
-        this.human.setFirstPleer(coin);
-        this.computer.setFirstPleer(!coin);
-              
+        let firstTurn = this.throwCoin();
         this.socket.emit('gameCreate', {
-            markers: {
-                human: this.game.players[0].marker,
-                computer: this.game.players[1].marker
-            }
+            firstTurn: firstTurn
         });
-        
-        this.game.startGame(); 
+       
+        this.game.startGame({
+            firstTurn: firstTurn
+        }); 
     }
 
     throwCoin () {
-        return  Math.random() < 0.5 ;
+        return  Math.random() < 0.5  ? "computer" : "human";
     }
-
-    saveGame() {
-
-    }
-
-    getGames() {
-
-    }
-
-
 };
 
 module.exports = Room;

@@ -1,9 +1,7 @@
-// var MongoClient    = require('mongodb').MongoClient;
-
-// MongoClient.connect("mongodb://sandbox:gtcjxybwf@ds129560.mlab.com:29560/tic-tac-toe", (err, db) => {
-// //    console.log(err, db)
-// });
 var Event = require("../lib/event");
+var Human = require("./human");
+var Computer = require("./computer");
+var GameCollection = require("../collections/game");
 
 class Game extends Event{
     constructor() {
@@ -11,51 +9,59 @@ class Game extends Event{
         this.map = [[0,0,0],[0,0,0],[0,0,0]];
         this.steps = [];
 
-        this.players = [];
+        this.players = {};
         this.winNumbers = [7, 56, 448, 73, 146, 292, 273, 84];
-        // this.human = human;
-        // this.computer = computer;
-       
+        this.winner = undefined;
     }
 
-    startGame() {
+    startGame(params) {
         this.map = [[0, 0, 0], [0, 0, 0], [0, 0, 0]];
-        this.players[0].winNumber = 0;
-        this.players[1].winNumber = 0;
+        this.players.human.winNumber = 0;
+        this.players.computer.winNumber = 0;
         this.steps = [];
-        if (this.players[1].isFirstPleer) {
-            this.players[1].makeStep(this.map);
+        
+        if (params.firstTurn == "computer") {
+            this.players.computer.makeStep(this.map);
         }
 
-        console.log(this.map);
         return this;
     }
 
     addPleer (pleer) {
-        this.players.push(pleer);
+        if(pleer instanceof Human) {
+            this.players.human = pleer;
+        }
+        if(pleer instanceof Computer) {
+            this.players.computer = pleer;
+        }
         return this;
     }
     initPleer () {
-        this.players[0].on("makeStep", step => {
-            this.map[step.y][step.x] = this.players[0].marker;
+        this.players.human.on("makeStep", step => {
+            this.map[step.y][step.x] = this.players.human.marker;
             this.steps.push(step);
             if (this.checkWin()) {
-                this.trigger("gameOver", "human");
+                this.winner = "human";
+                this.gameOver();
             } else if (this.ifFullBorder()) {
-                this.trigger("gameOver", "pat");
+                this.winner = "nobody";
+                this.gameOver();
             } else {
-                this.players[1].makeStep(this.map);
+                this.players.computer.makeStep(this.map);
             }
         })
 
-        this.players[1].on("makeStep", step => {
-            this.map[step.y][step.x] = this.players[1].marker;
+        this.players.computer.on("makeStep", step => {
+            this.map[step.y][step.x] = this.players.computer.marker;
             this.steps.push(step);
             this.trigger("computerMove", step);
+            
             if (this.checkWin()) {
-                this.trigger("gameOver", "computer");
+                this.winner = "computer";
+                this.gameOver();
             } else if (this.ifFullBorder()) {
-                this.trigger("gameOver", "pat");
+                this.winner = "nobody";
+                this.gameOver();
             } 
         })
         return this;
@@ -63,9 +69,8 @@ class Game extends Event{
 
     checkWin() {
         let hasWinner = false;
-        console.log(this.players[0].winNumber, this.players[1].winNumber);
         this.winNumbers.forEach(winNumber => {
-            if (winNumber == this.players[0].winNumber || winNumber == this.players[1].winNumber ) {
+            if (winNumber == this.players.computer.winNumber || winNumber == this.players.human.winNumber ) {
                 hasWinner = true;
             }
         });
@@ -76,6 +81,23 @@ class Game extends Event{
         return this.steps.length >= 9;
     }
 
+    gameOver() {
+        var gameParam = { 
+            steps : this.steps, 
+            winner: this.winner, 
+            players: {
+                computer: this.players.computer.name,
+                human: this.players.human.name
+            }   
+        };
+        
+        (new GameCollection()).insert(gameParam);
+        this.trigger("gameOver", gameParam);
+    }
+
+    getPlayed() {
+        return  (new GameCollection()).get(); 
+    }
   
 };
 

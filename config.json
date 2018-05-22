@@ -1,0 +1,6 @@
+{
+    "db": {
+        "host":  "mongodb://sandbox:gtcjxybwf@ds129560.mlab.com:29560/tic-tac-toe",
+        "database": "tic-tac-toe"   
+    }
+}

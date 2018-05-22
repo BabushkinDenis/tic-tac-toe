@@ -1,8 +1,11 @@
 var Player = require("./player");
 
 class Computer extends Player {
-    constructor(name) {
+    constructor() {
         super();
+        this.name = "Computer";
+        this.marker = "c";
+
     }
 
     makeStep(map) {
