@@ -1,4 +1,4 @@
-var Event = require("../lib/event");
+var Event  = require("../lib/event");
 
 class Player extends Event {
     constructor() {

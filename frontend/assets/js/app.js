@@ -36,13 +36,21 @@ var GameResults = require("./gameResults/gameResults");
 
         this.socket.on('gameOver', function(result){
             self.gameBoard.stopGame();
+            self.gameResults.addRow(result);
             console.log("gameOver", result);
+        });
+
+        this.gameResults.on("gameSelected", function(data){
+            self.gameBoard.erase();
+            data.steps.forEach(function(step, i){
+               i%2 ? self.gameBoard.setComputerMove(step) : self.gameBoard.setHumanMove(step);
+            });
+            self.gameBoard.stopGame();
         });
 
 
         this.socket.on("playedGames", function(playedGanes){
-            console.log(playedGanes);
-            (playedGanes||[]).forEach(function(row){
+            (playedGanes||[]).reverse().forEach(function(row){
                 self.gameResults.addRow(row);                
             });
         });

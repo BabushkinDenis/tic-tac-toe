@@ -120,12 +120,42 @@
 
 
     &__gameResults {
+        margin-bottom: 20px;
         width: 50%;
         float: left;
         padding-left: 20px;
         box-sizing: border-box;
 
+        .GameResults {
+            &__row {
+                cursor: pointer;
+            }
 
+            &__cell {
+                float: left;
+                padding: 10px;
+                width: 30%;
+                box-sizing: border-box;
+                height: 28px;
+                color: $gray;
+
+                &._computer {
+
+                }
+
+                ._winercomputer {
+                    @extend .icon-sad;
+                    color: $red;
+                }
+
+                ._winerhuman {
+                    @extend .icon-smile;
+                    color: $blue;
+                }
+            }
+
+
+        }
 
 
     }

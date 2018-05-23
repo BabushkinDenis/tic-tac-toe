@@ -5,15 +5,18 @@ class Computer extends Player {
         super();
         this.name = "Computer";
         this.marker = "c";
-        
+        this.scoreCombinations = [];
     }
 
     makeStep(map) {
         var winNumbers = [7, 56, 448, 73, 146, 292, 273, 84];
-        var allowedMoves = map.reduce(function (pv, cv) { return pv.concat(cv) }).map(function (el, i) { return el == 0 ? 1 << (i) : 0 }).filter(function (el) { return el != 0;});
+        var allowedMoves = map
+            .reduce(function (pv, cv) { return pv.concat(cv) })
+            .map(function (el, i) { return el == 0 ? 1 << (i) : 0 })
+            .filter(function (el) { return el != 0;});
+                            
         var bestTurns = [];
         var bestTurn;
-        var scoreCombinations = [];
          
         function findBestTurn(aM, wN) {
             for (var index = 0; index < aM.length; index++) {
@@ -26,32 +29,22 @@ class Computer extends Player {
                 }
             }
         };
-        scoreCombinations.forEach(function(score){
+
+        this.scoreCombinations.forEach(function(score){
             findBestTurn(allowedMoves, score);
         });
         
-        bestTurn = bestTurns.length ? bestTurns[Math.ceil(Math.random() * 1000) % bestTurns.length] : allowedMoves[Math.ceil(Math.random() * 1000) % allowedMoves.length];
+        bestTurn = bestTurns.length ? bestTurns[0] : allowedMoves[Math.ceil(Math.random() * 1000) % allowedMoves.length];
         
-        scoreCombinations = scoreCombinations.concat(bestTurn, scoreCombinations.map(function (el) { return el + bestTurn}));
-        console.log("comb:",scoreCombinations);
-        console.log(allowedMoves);
-        console.log(bestTurns);
-        console.log(bestTurn, this.winNumber);
-        console.log({
-            x: Math.floor((Math.log(bestTurn) / Math.log(2)) / 3),
-            y: (Math.log(bestTurn) / Math.log(2)) % 3
-        })
-
-        this.winNumber += bestTurn;
+        this.scoreCombinations = this.scoreCombinations
+            .concat(bestTurn, this.scoreCombinations.map(function (el) { return el + bestTurn}))
+            .sort(function (a,b){return a < b;});
 
         this.trigger("makeStep", {
-            x: Math.floor((Math.log(bestTurn) / Math.log(2)) / 3),
-            y: (Math.log(bestTurn) / Math.log(2)) % 3
+            x: (Math.log(bestTurn) / Math.log(2)) % 3, 
+            y: Math.floor((Math.log(bestTurn) / Math.log(2)) / 3)
         });
-        return;
     }
 };
-
-
 
 module.exports = Computer;

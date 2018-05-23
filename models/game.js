@@ -17,7 +17,9 @@ class Game extends Event{
     startGame(params) {
         this.map = [[0, 0, 0], [0, 0, 0], [0, 0, 0]];
         this.players.human.winNumber = 0;
+        this.players.human.scoreCombinations = [];
         this.players.computer.winNumber = 0;
+        this.players.computer.scoreCombinations = [];
         this.steps = [];
         
         if (params.firstTurn == "computer") {
@@ -70,8 +72,7 @@ class Game extends Event{
     checkWin() {
         let hasWinner = false;
         this.winNumbers.forEach(winNumber => {
-            if (winNumber == this.players.computer.winNumber || winNumber == this.players.human.winNumber ) {
-                console.log(this.players.computer.winNumber);
+            if (this.players.computer.scoreCombinations.find(el => { return el == winNumber}) || this.players.human.scoreCombinations.find(el => { return el == winNumber}) ) {
                 hasWinner = true;
             }
         });
@@ -91,9 +92,10 @@ class Game extends Event{
                 human: this.players.human.name
             }   
         };
-        
         (new GameCollection()).insert(gameParam);
+        
         this.trigger("gameOver", gameParam);
+        
     }
 
     getPlayed() {

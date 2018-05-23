@@ -3,7 +3,6 @@ var Computer = require("./computer");
 var Game = require("./game");
 
 
-
 class Room {
 
     constructor(socket) {
@@ -18,8 +17,8 @@ class Room {
             .on('computerMove', move => {
                 this.socket.emit('computerMove', move);
             })
-            .on('gameOver', (win) => {
-                this.socket.emit('gameOver', win);
+            .on('gameOver', (result) => {
+                this.socket.emit('gameOver', result);
             });
 
         this.socket.on('setPlayerName', this.human.setPlayerName.bind(this.human));
@@ -28,6 +27,9 @@ class Room {
         this.socket.on('getGames', () => {
             this.game.getPlayed()
                 .then(result=>{
+                    this.socket.emit("playedGames", result);
+                })
+                .catch(err => {
                     this.socket.emit("playedGames", result);
                 });
         });

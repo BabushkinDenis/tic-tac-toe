@@ -1,12 +1,4 @@
 "use strict";
-/* jshint browser:true, jquery:true,browserify:true */
-/*
- * 
- sidebar:change_region  Смена региона
- * 
- */
-/* jshint ignore:start */
-
 var event = {
     on: function (eventName, handler) {
         var this_ = this,
@@ -50,7 +42,4 @@ var event = {
     }
 };
 
-
-module.exports = event;
-
-/* jshint ignore:end */
+module.exports = event; 

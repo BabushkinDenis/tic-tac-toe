@@ -1,7 +1,6 @@
 "use strict";
 var eventMixin = require("../mixins/event");
 
-
 function GameBoard (wrap) {
     this.wrap = wrap;
     this.turn = false;
@@ -39,6 +38,17 @@ GameBoard.prototype.setComputerMove = function(move) {
     })
 }
 
+GameBoard.prototype.setHumanMove = function(move) {
+    var self = this;
+    this.lock = true;
+    [].forEach.call(this.wrap.getElementsByClassName("__cell"), function(el) {
+        if(el.dataset.x == move.x && el.dataset.y == move.y) {
+            el.classList.add("_" + self.markers.human);
+            el.classList.add("__checked");
+        }
+    })
+}
+
 GameBoard.prototype.show  = function() {
     this.wrap.classList.remove("_hidden");
 }
@@ -59,6 +69,7 @@ GameBoard.prototype.startGame = function(params) {
 
 GameBoard.prototype.stopGame = function() {
     this.lock = true;
+    return this;
 }
 
 GameBoard.prototype.erase = function() {
