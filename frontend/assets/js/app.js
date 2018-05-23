@@ -23,11 +23,12 @@ var GameResults = require("./gameResults/gameResults");
         });
 
         this.socket.on('computerMove', function(move){
-            console.log(move);
+            console.log("computer:" , move);
             self.gameBoard.setComputerMove(move);
         });
                 
         this.gameBoard.on("humenMove", function(move) {
+            console.log("himan:", move);
             self.socket.emit("humenMove", move);
         });
 

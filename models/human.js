@@ -8,7 +8,7 @@ class Human extends Player {
     }
 
     makeStep(step) {
-        this.winNumber += 1 << ((+step.x) * 3 + (+step.y));
+        this.winNumber += 1 << ((+step.y) * 3 + (+step.x));
         this.trigger("makeStep", step);
         return;
     }

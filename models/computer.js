@@ -38,15 +38,15 @@ class Computer extends Player {
         console.log(bestTurns);
         console.log(bestTurn, this.winNumber);
         console.log({
-            x: (Math.log(bestTurn) / Math.log(2)) % 3,
-            y: Math.floor((Math.log(bestTurn) / Math.log(2)) / 3)
+            x: Math.floor((Math.log(bestTurn) / Math.log(2)) / 3),
+            y: (Math.log(bestTurn) / Math.log(2)) % 3
         })
 
         this.winNumber += bestTurn;
 
         this.trigger("makeStep", {
-            x: (Math.log(bestTurn) / Math.log(2)) % 3,
-            y: Math.floor((Math.log(bestTurn) / Math.log(2)) / 3)
+            x: Math.floor((Math.log(bestTurn) / Math.log(2)) / 3),
+            y: (Math.log(bestTurn) / Math.log(2)) % 3
         });
         return;
     }
