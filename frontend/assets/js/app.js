@@ -23,6 +23,7 @@ var GameResults = require("./gameResults/gameResults");
         });
 
         this.socket.on('computerMove', function(move){
+            console.log(move);
             self.gameBoard.setComputerMove(move);
         });
                 
@@ -64,7 +65,11 @@ var GameResults = require("./gameResults/gameResults");
 
 
 
+
     root.app = new App();
 
 
 })(window);
+
+
+

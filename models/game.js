@@ -71,6 +71,7 @@ class Game extends Event{
         let hasWinner = false;
         this.winNumbers.forEach(winNumber => {
             if (winNumber == this.players.computer.winNumber || winNumber == this.players.human.winNumber ) {
+                console.log(this.players.computer.winNumber);
                 hasWinner = true;
             }
         });
